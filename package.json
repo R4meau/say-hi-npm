@@ -6,6 +6,9 @@
   "scripts": {
     "test": "jest"
   },
+  "bin": {
+    "say-hi": "index.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/R4meau/say-hi-npm.git"
