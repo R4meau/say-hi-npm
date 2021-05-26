@@ -1,3 +1,3 @@
-export default function (): 'hi' {
-  return 'hi';
+export default function (): void {
+  console.log('hi');
 }
