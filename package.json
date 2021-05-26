@@ -1,5 +1,5 @@
 {
-  "name": "say-hi-npm",
+  "name": "say-hi-cli",
   "version": "1.0.0",
   "description": "A demo NPM package to test automated releases and CI",
   "main": "index.js",
@@ -14,7 +14,7 @@
     "url": "git+https://github.com/R4meau/say-hi-npm.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "r@meau.me",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/R4meau/say-hi-npm/issues"
