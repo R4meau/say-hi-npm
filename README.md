@@ -9,4 +9,4 @@ Here's what's happening here:
 - The `auto-publish` action runs on every push to `main` and whenever you run it manually in the GitHub interface.
   - It only builds and deploy when it detects version changes from the package.json file.
   - After building, it publishes to NPM and creates a new GitHub release using the build artifacts
-- The `ci` action runs on every pull request to make sure tests are indeed passing
+- The `ci-pipeline` action runs on every pull request against the `develop` branch to make sure tests are indeed passing
