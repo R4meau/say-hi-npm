@@ -25,4 +25,4 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.16.3'
-        run: npm run test
+        run: npm test
