@@ -4,7 +4,8 @@
   "description": "A demo NPM package to test automated releases and CI",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint **/*.ts"
   },
   "bin": {
     "say-hi": "index.js"
