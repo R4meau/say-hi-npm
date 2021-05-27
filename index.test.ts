@@ -1,4 +1,4 @@
-import sayHiNPM from './index'
+import sayHiNPM from './index';
 
 describe('sayHiNPM', () => {
   test('should log "hi"', () => {
