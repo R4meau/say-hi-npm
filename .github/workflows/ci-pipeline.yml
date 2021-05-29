@@ -15,7 +15,9 @@ jobs:
         with:
           node-version: '12.16.3'
       - name: Package linting
-        run: npm run lint
+        run: |
+          npm i
+          npm run lint
 
   testing:
     name: Testing
@@ -27,4 +29,6 @@ jobs:
         with:
           node-version: '12.16.3'
       - name: Package testing
-        run: npm test
+        run: |
+          npm i
+          npm test
