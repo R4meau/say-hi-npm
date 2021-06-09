@@ -1,0 +1,39 @@
+name: Auto-publish and auto-release
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - prod
+    paths:
+      - 'package.json'
+jobs:
+  build:
+    name: Build
+    outputs:
+      tag: ${{ env.tag }}
+      version: ${{ env.version }}
+      version_changed: ${{ steps.check.outputs.changed }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check version changes
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          diff-search: true
+
+      - run: |
+          echo "version=${{ steps.check.outputs.version }}" >> $GITHUB_ENV
+
+      - name: Check latest tag
+        id: latest
+        if: contains(github.ref, 'prod') || github.event_name == 'workflow_dispatch'
+        run: echo "tag=latest" >> $GITHUB_ENV
+
+      - uses: actions/setup-node@v1
+        if: steps.check.outputs.changed == 'true' && contains(github.ref, 'main')
+        with:
+          node-version: '12.16.3'
+        run: echo "tag=latest" >> $GITHUB_ENV
