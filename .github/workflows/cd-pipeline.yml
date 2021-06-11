@@ -32,7 +32,7 @@ jobs:
       - name: Build for latest tag
         if: contains(github.ref, 'prod') || github.event_name == 'workflow_dispatch'
         run: |
-          echo "Building v${{ steps.check.outputs.version }} (${{ steps.check.outputs.tag }})"
+          echo "Building v${{ steps.check.outputs.version }} (latest)"
           echo "tag=latest" >> $GITHUB_ENV
           npm ci
           npx tsc index.ts
@@ -41,8 +41,8 @@ jobs:
       - name: Build for tagged version
         if: steps.check.outputs.changed == 'true' && contains(github.ref, 'main')
         run: |
-          echo "Building v${{ steps.check.outputs.version }} (${{ steps.check.outputs.tag }})"
-          echo "tag=${{ steps.check.outputs.version }}" >> $GITHUB_ENV
+          echo "Building v${{ steps.check.outputs.version }} (prerelease)"
+          echo "tag=prerelease" >> $GITHUB_ENV
           npm ci
           npx tsc index.ts
           cp index.js index-${{ steps.check.outputs.version }}.js
