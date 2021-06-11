@@ -16,6 +16,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.16.3'
+
       - name: Check version changes
         uses: EndBug/version-check@v1
         id: check
@@ -24,10 +28,6 @@ jobs:
 
       - run: |
           echo "version=${{ steps.check.outputs.version }}" >> $GITHUB_ENV
-
-      - uses: actions/setup-node@v1
-        with:
-          node-version: '12.16.3'
 
       - name: Build for latest tag
         if: contains(github.ref, 'prod') || github.event_name == 'workflow_dispatch'
