@@ -46,6 +46,7 @@ jobs:
           cp index.js index-${{ steps.check.outputs.version }}.js
 
       - name: Upload artifact
+        if: steps.check.outputs.changed == 'true' || env.tag == 'latest'
         uses: actions/upload-artifact@v2
         with:
           name: build-files 
