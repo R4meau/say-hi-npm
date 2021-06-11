@@ -77,7 +77,7 @@ jobs:
             name: build-files
 
         - name: Publish to npm
-          run: npm publish --access=public --tag ${{ needs.build.outputs.tag }}
+          run: npm publish --access public --tag ${{ needs.build.outputs.tag }}
           env:
             NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
@@ -89,5 +89,6 @@ jobs:
             name: say-hi npm package v${{ needs.build.outputs.version }}
             tag_name: v${{ needs.build.outputs.version }}
             draft: false
+            prerelease: ${{ needs.build.outputs.tag == 'prerelease' }}
             files: index-*.js
             fail_on_unmatched_files: true
