@@ -1,6 +1,6 @@
 {
   "name": "say-hi-cli",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A demo NPM package to test automated releases and CI",
   "main": "index.js",
   "scripts": {
