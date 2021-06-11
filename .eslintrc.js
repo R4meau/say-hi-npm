@@ -25,5 +25,7 @@ module.exports = {
     // This allows us to use undefined variables in our Jest tests
     // Stuffs like 'describe' and 'expect'
     'no-undef': 0,
+    // Just testing a successful PR for the CI pipeline
+    'no-useless-return': 0,
   },
 };

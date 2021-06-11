@@ -1,0 +1,90 @@
+name: Auto-publish and auto-release
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - prod
+jobs:
+  build:
+    name: Build
+    outputs:
+      tag: ${{ env.tag }}
+      version: ${{ env.version }}
+      version_changed: ${{ steps.check.outputs.changed }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Check version changes
+        uses: EndBug/version-check@v1
+        id: check
+        with:
+          diff-search: true
+
+      - run: |
+          echo "version=${{ steps.check.outputs.version }}" >> $GITHUB_ENV
+
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.16.3'
+
+      - name: Build for latest tag
+        if: contains(github.ref, 'prod') || github.event_name == 'workflow_dispatch'
+        run: |
+          echo "Building v${{ needs.build.outputs.version }} (${{ needs.build.outputs.tag }})"
+          echo "tag=latest" >> $GITHUB_ENV
+          npx tsc index.ts
+          cp index.js index-latest.js
+
+      - name: Build for tagged version
+        if: steps.check.outputs.changed == 'true' && contains(github.ref, 'main')
+        run: |
+          echo "Building v${{ needs.build.outputs.version }} (${{ needs.build.outputs.tag }})"
+          echo "tag=${{ steps.check.outputs.version }}" >> $GITHUB_ENV
+          npx tsc index.ts
+          cp index.js index-${{ steps.check.outputs.version }}.js
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-files 
+          path: |
+            index-*.js
+            index.js
+          retention-days: 3
+          if-no-files-found: error
+
+  release-and-publish:
+      name: Release and Publish
+      needs: build
+      if: needs.build.outputs.version_changed == 'true' || needs.build.outputs.tag == 'latest'
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v1
+          with:
+            node-version: '12.16.3'
+
+        - run: |
+            echo "Publishing and releasing v${{ needs.build.outputs.version }} (${{ needs.build.outputs.tag }})"
+
+        - uses: actions/download-artifact@v2
+          with:
+            name: build-files
+
+        - name: Publish to npm
+          run: npm publish --access=public --tag ${{ needs.build.outputs.tag }}
+          env:
+            NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+        - name: Create GitHub Release with tag and artifact
+          uses: softprops/action-gh-release@v1
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          with:
+            name: say-hi npm package v${{ needs.build.outputs.version }}
+            tag_name: v${{ needs.build.outputs.version }}
+            draft: false
+            files: index-*.js
+            fail_on_unmatched_files: true
