@@ -42,6 +42,7 @@ jobs:
           npx tsc index.ts
       
       - name: Prepare artifact
+        if: steps.check.outputs.changed == 'true'
         run: cp index.js index-${{ env.tag }}.js
 
       - name: Upload artifacts
@@ -84,9 +85,8 @@ jobs:
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           with:
-            name: say-hi npm package v${{ needs.build.outputs.version }}
-            tag_name: v${{ needs.build.outputs.version }}
+            name: say-hi npm package ${{ needs.build.outputs.tag }}
+            tag_name: ${{ needs.build.outputs.tag }}
             draft: false
-            prerelease: ${{ needs.build.outputs.tag == 'prerelease' }}
             files: index-*.js
             fail_on_unmatched_files: true
