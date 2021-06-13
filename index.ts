@@ -2,7 +2,7 @@
 
 export default function sayHiNPM(): void {
   console.log('hi');
-  return;
+  return null;
 }
 
 if (require.main === module) sayHiNPM();
